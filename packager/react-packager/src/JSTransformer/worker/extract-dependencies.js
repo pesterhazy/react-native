@@ -35,7 +35,8 @@ function extractDependencies(code) {
       const node = path.node;
       const callee = node.callee;
       const arg = node.arguments[0];
-      if (callee.type !== 'Identifier' || callee.name !== 'require' || !arg || arg.type !== 'StringLiteral') {
+      if (!((callee.type === 'Identifier' && callee.name === 'require' && arg && arg.type === 'StringLiteral') ||
+            (callee.type === 'MemberExpression' && callee.object && callee.object.name === "goog" && callee.property && callee.property.name == "require" && arg && arg.type === 'StringLiteral'))) {
         return;
       }
       dependencyOffsets.push(arg.start);
